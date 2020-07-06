@@ -1,10 +1,5 @@
 <template>
   <BaseView>
-    <!-- Topbar config - give it a search bar -->
-    <template #topbar-content>
-      Topbar stuff
-    </template>
-
     <!-- The main content: comparisons of each set of controls in control_sets, etc -->
     <template #main-content>
       <v-container fluid grid-list-md pa-2>
@@ -30,9 +25,6 @@
     >
       <v-icon>add</v-icon>
     </v-btn>
-
-    <!-- File select modal -->
-    <UploadNexus v-model="dialog" @got-files="dialog = false" />
   </BaseView>
 </template>
 
@@ -41,7 +33,6 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import BaseView from '@/views/BaseView.vue';
 import Modal from '@/components/global/Modal.vue';
-import UploadNexus from '@/components/global/UploadNexus.vue';
 
 import CompareRow from '@/components/cards/comparison/CompareRow.vue';
 
@@ -50,7 +41,7 @@ import {ControlStatus, Severity, context} from 'inspecjs';
 import {FileID} from '@/store/report_intake';
 import {ComparisonContext} from '../utilities/delta_util';
 import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '../store/data_store';
+import InspecDataModule from '@/store/data_store';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -62,14 +53,10 @@ const Props = Vue.extend({
   components: {
     BaseView,
     Modal,
-    UploadNexus,
     CompareRow
   }
 })
 export default class Compare extends Props {
-  /** Whether or not the model is showing */
-  dialog: boolean = false;
-
   /** Yields the current two selected reports as an ExecDelta,  */
   get curr_delta(): ComparisonContext {
     let data_store = getModule(InspecDataModule, this.$store);
