@@ -96,7 +96,6 @@ class InspecIntakeModule extends VuexModule {
    */
   @Action
   async loadText(options: TextLoadOptions): Promise<Error | null> {
-    //console.log("Load Text: " + options.text);
     // Fetch our data store
     const data = getModule(DataModule, Store);
 
@@ -105,9 +104,6 @@ class InspecIntakeModule extends VuexModule {
     try {
       result = parse.convertFile(options.text);
     } catch (e) {
-      console.log(
-        `Failed to convert file ${options.filename} due to error "${e}".`
-      );
       return new Error(
         `Failed to convert file ${options.filename} due to error "${e}".`
       );
@@ -116,7 +112,6 @@ class InspecIntakeModule extends VuexModule {
     // Determine what sort of file we (hopefully) have, then add it
     if (result['1_0_ExecJson']) {
       // Handle as exec
-      console.log('is Execution');
       let execution = result['1_0_ExecJson'];
       execution = Object.freeze(execution);
       if (options.database_id) {
@@ -129,7 +124,6 @@ class InspecIntakeModule extends VuexModule {
           tags: options.tags,
           execution
         };
-        console.log('add Database Execution');
         data.addExecution(reportFile);
       } else {
         let reportFile = {
@@ -137,22 +131,18 @@ class InspecIntakeModule extends VuexModule {
           filename: options.filename,
           execution
         };
-        console.log('add Execution');
         data.addExecution(reportFile);
       }
     } else if (result['1_0_ProfileJson']) {
       // Handle as profile
-      console.log('is Profile');
       let profile = result['1_0_ProfileJson'];
       let profileFile = {
         unique_id: options.unique_id,
         filename: options.filename,
         profile
       };
-      console.log('addProfile');
       data.addProfile(profileFile);
     } else {
-      console.log('is Nothing');
       return new Error("Couldn't parse data");
     }
     return null;

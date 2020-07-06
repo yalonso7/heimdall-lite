@@ -51,7 +51,6 @@ export default class Landing extends LandingProps {
   on_got_files(ids: FileID[]) {
     // If just one file, focus it
     if (ids.length === 1) {
-      console.log('one file: ' + ids[0]);
       this.$router.push(`/results/${ids[0]}`);
     }
 

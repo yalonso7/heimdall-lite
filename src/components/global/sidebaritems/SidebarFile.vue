@@ -53,12 +53,10 @@ export default class FileItem extends FileItemProps {
   save_this_file(evt: Event) {
     evt.stopPropagation();
     evt.preventDefault();
-    console.log('save this file');
     let data_store = getModule(InspecDataModule, this.$store);
     let file = data_store.allFiles.find(
       f => f.unique_id === this.file.unique_id
     );
-    console.log('got file');
     if (file) {
       if (file.hasOwnProperty('execution')) {
         this.save_evaluation(file as EvaluationFile);
@@ -69,7 +67,6 @@ export default class FileItem extends FileItemProps {
   }
 
   async save_evaluation(file?: EvaluationFile): Promise<void> {
-    console.log('Save evaluation to ' + this.host);
     // checking if the input is valid
     if (file) {
       let mod = getModule(ServerModule, this.$store);
@@ -79,7 +76,6 @@ export default class FileItem extends FileItemProps {
           console.error('Unable to connect to ' + this.host);
         })
         .then(() => {
-          console.log('mode.save_evaluation');
           return mod.save_evaluation(file);
         })
         .catch(bad => {
