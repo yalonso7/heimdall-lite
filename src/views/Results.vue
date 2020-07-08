@@ -142,13 +142,12 @@ import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
-import FilteredDataModule, {Filter, TreeMapState} from '@/store/data_filters';
+import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
-import InspecIntakeModule, {FileID} from '@/store/report_intake';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '../store/data_store';
+import {InspecIntakeModule, FileID} from '@/store/report_intake';
+import {InspecDataModule} from '@/store/data_store';
 import {need_redirect_file} from '@/utilities/helper_util';
-import ServerModule from '@/store/server';
+import {ServerModule} from '@/store/server';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -217,10 +216,7 @@ export default class Results extends ResultsProps {
     }
 
     // Route if necessary
-    let redir = need_redirect_file(
-      result,
-      getModule(InspecDataModule, this.$store)
-    );
+    let redir = need_redirect_file(result, InspecDataModule);
     if (redir !== 'ok') {
       if (redir === 'root') {
         this.$router.push('/home');
@@ -292,8 +288,7 @@ export default class Results extends ResultsProps {
     }
 
     // Logic to check: are any files actually visible?
-    let filter = getModule(FilteredDataModule, this.$store);
-    if (filter.controls(this.all_filter).length === 0) {
+    if (FilteredDataModule.controls(this.all_filter).length === 0) {
       this.filter_snackbar = true;
     } else {
       this.filter_snackbar = false;
@@ -308,8 +303,9 @@ export default class Results extends ResultsProps {
    */
   get curr_title(): String | undefined {
     if (this.file_filter !== null) {
-      let store = getModule(InspecDataModule, this.$store);
-      let file = store.allFiles.find(f => f.unique_id === this.file_filter);
+      let file = InspecDataModule.allFiles.find(
+        f => f.unique_id === this.file_filter
+      );
       if (file) {
         return file.filename;
       }

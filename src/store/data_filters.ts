@@ -3,8 +3,8 @@
  */
 
 import {Module, VuexModule, getModule} from 'vuex-module-decorators';
-import DataModule, {
-  SourcedContextualizedProfile,
+import {
+  InspecDataModule,
   SourcedContextualizedEvaluation,
   isFromProfileFile
 } from '@/store/data_store';
@@ -82,11 +82,7 @@ function contains_term(
   store: Store,
   name: 'filteredData'
 })
-class FilteredDataModule extends VuexModule {
-  private get dataStore(): DataModule {
-    return getModule(DataModule, Store);
-  }
-
+export class FilteredData extends VuexModule {
   /**
    * Parameterized getter.
    * Get all profiles from the specified file id.
@@ -94,7 +90,6 @@ class FilteredDataModule extends VuexModule {
    */
   get profiles(): (file: FileID) => readonly context.ContextualizedProfile[] {
     // Setup a cache for this run
-    const depends = this.dataStore.contextualProfiles;
     const localCache: LRUCache<
       FileID,
       context.ContextualizedProfile[]
@@ -111,7 +106,7 @@ class FilteredDataModule extends VuexModule {
       let profiles: context.ContextualizedProfile[] = [];
 
       // Filter to those that match our filter. In this case that just means come from the right file id
-      this.dataStore.contextualProfiles.forEach(prof => {
+      InspecDataModule.contextualProfiles.forEach(prof => {
         if (isFromProfileFile(prof)) {
           if (prof.from_file.unique_id === file) {
             profiles.push(prof);
@@ -136,7 +131,6 @@ class FilteredDataModule extends VuexModule {
    */
   get controls(): (filter: Filter) => readonly context.ContextualizedControl[] {
     /** Cache by filter */
-    const depends = this.dataStore.contextualControls;
     const localCache: LRUCache<
       string,
       readonly context.ContextualizedControl[]
@@ -163,7 +157,7 @@ class FilteredDataModule extends VuexModule {
         controls = profiles.flatMap(profile => profile.contains);
       } else {
         // No file filter => we don't care about profile. Jump directly to the full control list
-        controls = this.dataStore.contextualControls;
+        controls = InspecDataModule.contextualControls;
       }
 
       // Filter by control id
@@ -220,7 +214,7 @@ class FilteredDataModule extends VuexModule {
   }
 }
 
-export default FilteredDataModule;
+export const FilteredDataModule = getModule(FilteredData);
 
 /**
  * Generates a unique string to represent a filter.

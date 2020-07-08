@@ -2,15 +2,14 @@
  * Tracks uploaded files, and their parsed contents
  */
 
-import {Module, VuexModule, Mutation, Action} from 'vuex-module-decorators';
 import {
-  HDFControl,
-  parse,
-  schemas_1_0,
-  hdfWrapControl,
-  ControlStatus,
-  context
-} from 'inspecjs';
+  Module,
+  VuexModule,
+  Mutation,
+  Action,
+  getModule
+} from 'vuex-module-decorators';
+import {context} from 'inspecjs';
 import {FileID, EvaluationFile, ProfileFile} from '@/store/report_intake';
 import Store from '@/store/store';
 
@@ -37,7 +36,7 @@ export interface SourcedContextualizedEvaluation
   store: Store,
   name: 'data'
 })
-class InspecDataModule extends VuexModule {
+export class InspecData extends VuexModule {
   /** State var containing all execution files that have been added */
   executionFiles: EvaluationFile[] = [];
 
@@ -153,4 +152,4 @@ class InspecDataModule extends VuexModule {
   }
 }
 
-export default InspecDataModule;
+export const InspecDataModule = getModule(InspecData);

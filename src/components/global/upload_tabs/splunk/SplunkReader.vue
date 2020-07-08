@@ -61,8 +61,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import InspecIntakeModule, {FileID} from '@/store/report_intake';
+import {FileID} from '@/store/report_intake';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
 import {

@@ -42,14 +42,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
 import {FileID, next_free_file_ID, EvaluationFile} from '@/store/report_intake';
 import {
   SplunkEndpoint,
   ExecutionMetaInfo,
   SplunkErrorCode
-} from '../../../../utilities/splunk_util';
-import InspecDataModule from '../../../../store/data_store';
+} from '@/utilities/splunk_util';
+import {InspecDataModule} from '@/store/data_store';
 
 const SEARCH_INTERVAL = 10000;
 
@@ -113,7 +112,7 @@ export default class FileList extends Props {
           filename: `${event.filename} (Splunk)`,
           execution: exec
         } as EvaluationFile;
-        getModule(InspecDataModule, this.$store).addExecution(file);
+        InspecDataModule.addExecution(file);
         this.$emit('got-files', [unique_id]);
       })
       .catch(fail => {

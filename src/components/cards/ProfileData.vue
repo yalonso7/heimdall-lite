@@ -61,16 +61,16 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import InspecDataModule, {
+import {
+  InspecDataModule,
   SourcedContextualizedProfile,
   SourcedContextualizedEvaluation,
   isFromProfileFile
 } from '@/store/data_store';
-import StatusCountModule from '@/store/status_counts';
-import {getModule} from 'vuex-module-decorators';
-import FilteredDataModule, {Filter} from '../../store/data_filters';
+import {StatusCountModule} from '@/store/status_counts';
+import {FilteredDataModule, Filter} from '@/store/data_filters';
 import {profile_unique_key} from '../../utilities/format_util';
-import {InspecFile, ProfileFile} from '../../store/report_intake';
+import {InspecFile, ProfileFile} from '@/store/report_intake';
 import {context} from 'inspecjs';
 
 /**
@@ -117,13 +117,11 @@ export default class ProfileData extends Props {
   /** Flat representation of all profiles that ought to be visible  */
   get visible_profiles(): Readonly<context.ContextualizedProfile[]> {
     // Get all profiles
-    let store = getModule(InspecDataModule, this.$store);
     let profiles: Readonly<context.ContextualizedProfile[]> =
-      store.contextualProfiles;
+      InspecDataModule.contextualProfiles;
     let filter = this.filter as Filter;
     if (filter.fromFile !== undefined) {
-      let filtered = getModule(FilteredDataModule, this.$store);
-      profiles = filtered.profiles(filter.fromFile);
+      profiles = FilteredDataModule.profiles(filter.fromFile);
     }
     return profiles;
   }

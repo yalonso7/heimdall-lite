@@ -16,8 +16,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import UploadNexus from '@/components/global/UploadNexus.vue';
-import ServerModule from '@/store/server';
-import {getModule} from 'vuex-module-decorators';
+import {ServerModule} from '@/store/server';
 
 import {Filter} from '@/store/data_filters';
 import {FileID} from '@/store/report_intake';

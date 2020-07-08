@@ -21,8 +21,7 @@ import LinkItem, {
   LinkAction
 } from '@/components/global/sidebaritems/SidebarLink.vue';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '../../store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -39,8 +38,7 @@ export default class ExportJSON extends Props {
   export_json() {
     let id_string: string = this.$route.params.id;
     let file_id = parseInt(id_string);
-    let store = getModule(InspecDataModule, this.$store);
-    let file = store.allFiles.find(f => f.unique_id === file_id);
+    let file = InspecDataModule.allFiles.find(f => f.unique_id === file_id);
     if (file) {
       if (file.hasOwnProperty('execution')) {
         this.export_execution(file as EvaluationFile);

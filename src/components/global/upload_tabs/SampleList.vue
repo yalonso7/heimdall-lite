@@ -22,14 +22,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
 import {defined} from '@/utilities/async_util';
-import InspecIntakeModule, {
+import {
+  InspecIntakeModule,
   FileID,
   next_free_file_ID
 } from '@/store/report_intake';
-import InspecDataModule from '../../../store/data_store';
-import AppInfoModule from '../../../store/app_info';
+import {InspecDataModule} from '@/store/data_store';
+import {AppInfoModule} from '@/store/app_info';
 
 interface Sample {
   name: string;
@@ -95,8 +95,7 @@ export default class SampleList extends Props {
   }
 
   get repo(): string {
-    let mod = getModule(AppInfoModule, this.$store);
-    return `${mod.repo_org}/${mod.repo_name}`;
+    return `${AppInfoModule.repo_org}/${AppInfoModule.repo_name}`;
   }
 
   /** Callback for our list item clicks */
@@ -104,13 +103,11 @@ export default class SampleList extends Props {
     // Generate an id
     let unique_id = next_free_file_ID();
 
-    // Get intake module
-    let intake_module = getModule(InspecIntakeModule, this.$store);
     // Do fetch
     fetch(sample.url, {method: 'get'})
       .then(response => response.text())
       .then(text =>
-        intake_module.loadText({filename: sample.name, unique_id, text})
+        InspecIntakeModule.loadText({filename: sample.name, unique_id, text})
       )
       .then(err => {
         // Handle errors if necessary

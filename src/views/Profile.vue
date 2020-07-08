@@ -121,14 +121,9 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import BaseView from '@/views/BaseView.vue';
 import Navbar from '@/views/Navbar.vue';
-import InspecIntakeModule, {
-  FileID,
-  next_free_file_ID
-} from '@/store/report_intake';
+import {FileID, next_free_file_ID} from '@/store/report_intake';
 import {plainToClass} from 'class-transformer';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '../store/data_store';
-import ServerModule from '@/store/server';
+import {ServerModule} from '@/store/server';
 import {UserProfile, Evaluation, Usergroup} from '@/types/models.ts';
 export interface RetrieveHash {
   unique_id: number;
@@ -193,19 +188,17 @@ export default class Profile extends ProfileProps {
   }
 
   get user(): UserProfile {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.profile) {
-      this.user_id = mod.profile.id;
-      return mod.profile;
+    if (ServerModule.profile) {
+      this.user_id = ServerModule.profile.id;
+      return ServerModule.profile;
     } else {
       return new UserProfile();
     }
   }
 
   get items(): Evaluation[] {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.user_evaluations) {
-      let eval_obj = Array.from(mod.user_evaluations) || [];
+    if (ServerModule.user_evaluations) {
+      let eval_obj = Array.from(ServerModule.user_evaluations) || [];
       const evals: Evaluation[] = eval_obj.map((x: any) =>
         plainToClass(Evaluation, x)
       );
@@ -219,9 +212,8 @@ export default class Profile extends ProfileProps {
   }
 
   get usergroups(): Usergroup[] {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.usergroups) {
-      return mod.usergroups;
+    if (ServerModule.usergroups) {
+      return ServerModule.usergroups;
     } else {
       return [];
     }
@@ -261,15 +253,12 @@ export default class Profile extends ProfileProps {
         name: this.group_name
       };
       (this.$refs.form as any).reset();
-      // Get server module
-      let mod = getModule(ServerModule, this.$store);
-      await mod
-        .connect(host)
+      await ServerModule.connect(host)
         .catch(bad => {
           console.error('Unable to connect to ' + host);
         })
         .then(() => {
-          return mod.new_usergroup(group_hash);
+          return ServerModule.new_usergroup(group_hash);
         })
         .catch(bad => {
           console.error(`bad save ${bad}`);
@@ -283,9 +272,7 @@ export default class Profile extends ProfileProps {
     // Generate an id
     let unique_id = next_free_file_ID();
 
-    let mod = getModule(ServerModule, this.$store);
-    await mod
-      .connect(host)
+    await ServerModule.connect(host)
       .catch(bad => {
         console.error('Unable to connect to ' + host);
       })
@@ -294,7 +281,7 @@ export default class Profile extends ProfileProps {
           unique_id: unique_id,
           eva: evaluation
         };
-        return mod.retrieve_evaluation(eva_hash);
+        return ServerModule.retrieve_evaluation(eva_hash);
       })
       .catch(bad => {
         console.error(`bad login ${bad}`);
@@ -315,14 +302,12 @@ export default class Profile extends ProfileProps {
         group_id: this.selected_group,
         evaluation_ids: this.selected
       };
-      let mod = getModule(ServerModule, this.$store);
-      await mod
-        .connect(host)
+      await ServerModule.connect(host)
         .catch(bad => {
           console.error('Unable to connect to ' + host);
         })
         .then(() => {
-          return mod.add_to_usergroup(group_hash);
+          return ServerModule.add_to_usergroup(group_hash);
         })
         .catch(bad => {
           console.error(`bad save ${bad}`);

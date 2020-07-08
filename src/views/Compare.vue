@@ -40,8 +40,7 @@ import {Filter} from '@/store/data_filters';
 import {ControlStatus, Severity, context} from 'inspecjs';
 import {FileID} from '@/store/report_intake';
 import {ComparisonContext} from '../utilities/delta_util';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -59,8 +58,7 @@ const Props = Vue.extend({
 export default class Compare extends Props {
   /** Yields the current two selected reports as an ExecDelta,  */
   get curr_delta(): ComparisonContext {
-    let data_store = getModule(InspecDataModule, this.$store);
-    const all_executions = data_store.contextualExecutions;
+    const all_executions = InspecDataModule.contextualExecutions;
     return new ComparisonContext(all_executions);
   }
 

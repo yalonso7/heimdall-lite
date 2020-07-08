@@ -25,10 +25,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import ServerModule from '@/store/server';
+import {ServerModule} from '@/store/server';
 
 // We declare the props separately to make props types inferable.
 const FileItemProps = Vue.extend({
@@ -46,15 +45,13 @@ export default class FileItem extends FileItemProps {
   close_this_file(evt: Event) {
     evt.stopPropagation();
     evt.preventDefault();
-    let data_store = getModule(InspecDataModule, this.$store);
-    data_store.removeFile(this.file.unique_id);
+    InspecDataModule.removeFile(this.file.unique_id);
   }
 
   save_this_file(evt: Event) {
     evt.stopPropagation();
     evt.preventDefault();
-    let data_store = getModule(InspecDataModule, this.$store);
-    let file = data_store.allFiles.find(
+    let file = InspecDataModule.allFiles.find(
       f => f.unique_id === this.file.unique_id
     );
     if (file) {
@@ -69,14 +66,12 @@ export default class FileItem extends FileItemProps {
   async save_evaluation(file?: EvaluationFile): Promise<void> {
     // checking if the input is valid
     if (file) {
-      let mod = getModule(ServerModule, this.$store);
-      await mod
-        .connect(this.host)
+      await ServerModule.connect(this.host)
         .catch(bad => {
           console.error('Unable to connect to ' + this.host);
         })
         .then(() => {
-          return mod.save_evaluation(file);
+          return ServerModule.save_evaluation(file);
         })
         .catch(bad => {
           console.error(`bad save ${bad}`);

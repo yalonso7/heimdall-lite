@@ -49,8 +49,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {InspecFile, EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
 import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
@@ -74,8 +73,7 @@ const SidebarProps = Vue.extend({
 export default class Sidebar extends SidebarProps {
   /** Generates files for all */
   get visible_files(): Array<ProfileFile | EvaluationFile> {
-    let data_store = getModule(InspecDataModule, this.$store);
-    let files = data_store.allFiles;
+    let files = InspecDataModule.allFiles;
     files = files.sort((a, b) => a.filename.localeCompare(b.filename));
     return files;
   }

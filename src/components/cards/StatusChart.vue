@@ -10,8 +10,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
-import {getModule} from 'vuex-module-decorators';
-import StatusCountModule from '@/store/status_counts';
+import {StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
 
 // We declare the props separately to make props types inferable.
@@ -61,13 +60,12 @@ export default class StatusChart extends StatusChartProps {
   ];
 
   get series(): number[] {
-    let counts: StatusCountModule = getModule(StatusCountModule, this.$store);
     return [
-      counts.passed(this.filter),
-      counts.failed(this.filter),
-      counts.notApplicable(this.filter),
-      counts.notReviewed(this.filter),
-      counts.profileError(this.filter)
+      StatusCountModule.passed(this.filter),
+      StatusCountModule.failed(this.filter),
+      StatusCountModule.notApplicable(this.filter),
+      StatusCountModule.notReviewed(this.filter),
+      StatusCountModule.profileError(this.filter)
     ];
   }
 

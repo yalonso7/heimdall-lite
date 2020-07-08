@@ -45,8 +45,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import StatusCountModule from '@/store/status_counts';
+import {StatusCountModule} from '@/store/status_counts';
 import {Filter} from '../../store/data_filters';
 
 interface CardProps {
@@ -70,7 +69,6 @@ const StatusCardRowProps = Vue.extend({
 export default class StatusCardRow extends StatusCardRowProps {
   // Cards
   get standardCardProps(): CardProps[] {
-    let counts = getModule(StatusCountModule, this.$store);
     let filter = this.filter as Filter;
     return [
       {
@@ -78,34 +76,33 @@ export default class StatusCardRow extends StatusCardRowProps {
         title: 'Passed',
         subtitle: 'All tests passed',
         color: 'statusPassed',
-        number: counts.passed(filter)
+        number: StatusCountModule.passed(filter)
       },
       {
         icon: 'close-circle',
         title: 'Failed',
         subtitle: 'Has tests that failed',
         color: 'statusFailed',
-        number: counts.failed(filter)
+        number: StatusCountModule.failed(filter)
       },
       {
         icon: 'minus-circle',
         title: 'Not Applicable',
         subtitle: 'System exception or absent component',
         color: 'statusNotApplicable',
-        number: counts.notApplicable(filter)
+        number: StatusCountModule.notApplicable(filter)
       },
       {
         icon: 'alert-circle',
         title: 'Not Reviewed',
         subtitle: 'Can only be tested manually at this time',
         color: 'statusNotReviewed',
-        number: counts.notReviewed(filter)
+        number: StatusCountModule.notReviewed(filter)
       }
     ];
   }
 
   get errorProps(): CardProps | null {
-    let counts = getModule(StatusCountModule, this.$store);
     let filter = this.filter as Filter;
     // Want to ignore existing status filter
     filter = {
@@ -118,7 +115,7 @@ export default class StatusCardRow extends StatusCardRowProps {
       subtitle:
         'Errors running test - check profile run privileges or check with the author of profile',
       color: 'statusProfileError',
-      number: counts.profileError(filter)
+      number: StatusCountModule.profileError(filter)
     };
   }
 }
