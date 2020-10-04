@@ -33,7 +33,7 @@
     "@types/prismjs": "^1.16.0",
     "@types/xml-js": "^1.0.0",
     "@vue/cli": "^4.0.5",
-    "@vue/cli-plugin-unit-jest": "^4.3.1",
+    "@vue/cli-plugin-unit-jest": "^4.5.6",
     "apexcharts": "^3.10.1",
     "aws-sdk": "^2.573.0",
     "axios": "^0.19.2",
