@@ -41,7 +41,7 @@
     "chroma-js": "^2.1.0",
     "class-transformer": "^0.2.3",
     "connect": "^3.7.0",
-    "core-js": "^3.4.1",
+    "core-js": "^3.6.5",
     "d3": "^5.15.0",
     "date-fns": "^2.6.0",
     "diff": "^4.0.1",
